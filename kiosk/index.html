@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<style>
+		body { 
+			background-color:  #30739d;
+			padding: 0 0 0 0;
+			margin: 0 0 0 0;
+			overflow: hidden;
+		}
+		div {
+			text-align: center;
+		}
+		img {
+			width: 100%;
+		}
+    </style>
+		<script>
+		function loadError(image) {
+			image.onerror = "";
+			image.src = "loading.gif";
+			return true;
+		}
+		</script>
+	</head>
+	<body>
+		<img src="http://pnteide.meteorologia.sieltec.es/PNTeide.png" onerror="loadError(this)" />
+	</body>
+</html>
