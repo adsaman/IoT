@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<style>
-		body { 
+		body {
 			background-color: #30739d;
 			padding: 0 0 0 0;
 			margin: 0 0 0 0;
@@ -15,14 +15,31 @@
 		}
     </style>
 		<script>
+
+		var newImage = new Image();
+		newImage.src = "http://pnteide.meteorologia.sieltec.es/PNTeide.png";
+
+		function updateImage(interval = 300000) {
+			if (newImage.complete) {
+				teideImg = document.getElementById("dashboard");
+				teideImg.src = newImage.src;
+				teideImg.removeAttribute("style");
+
+				newImage = new Image();
+				newImage.src = "http://pnteide.meteorologia.sieltec.es/PNTeide.png?" + new Date().getTime();
+			}
+			setTimeout(updateImage, interval);
+		}
+
 		function loadError(image) {
 			image.onerror = "";
-			image.src = "loading.gif";
+			image.style = "display: none";
+			updateImage(5000);
 			return true;
 		}
 		</script>
 	</head>
-	<body>
-		<img src="http://pnteide.meteorologia.sieltec.es/PNTeide.png" onerror="loadError(this)" />
+	<body onload="updateImage()">
+		<img id="dashboard" src="http://pnteide.meteorologia.sieltec.es/PNTeide.png" onerror="loadError(this)" />
 	</body>
 </html>
