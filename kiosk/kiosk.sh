@@ -5,6 +5,5 @@ xset s noblank 	# don't blank the video device
 unclutter &	# hide mouse cursor
 matchbox-window-manager -use_titlebar no &
 while true; do
-	#midori -e Fullscreen -a $HOME/IoT/kiosk/index.html
-	epiphany-browser -a --profile ~/.config ~/IoT/kiosk/index.html
+	WEBKIT_DISABLE_TBS=1 epiphany-browser -a --profile ~/.config ~/IoT/kiosk/index.html
 done
