@@ -19,7 +19,7 @@
 		var newImage = new Image();
 		newImage.src = "http://pnteide.meteorologia.sieltec.es/PNTeide.png";
 
-		function updateImage(interval = 300000) {
+		function updateImage(interval) {
 			if (newImage.complete) {
 				teideImg = document.getElementById("dashboard");
 				teideImg.src = newImage.src;
@@ -28,7 +28,7 @@
 				newImage = new Image();
 				newImage.src = "http://pnteide.meteorologia.sieltec.es/PNTeide.png?" + new Date().getTime();
 			}
-			setTimeout(updateImage, interval);
+			setTimeout(updateImage, interval, interval);
 		}
 
 		function loadError(image) {
@@ -39,7 +39,7 @@
 		}
 		</script>
 	</head>
-	<body onload="updateImage()">
+	<body onload="updateImage(300000)">
 		<img id="dashboard" src="http://pnteide.meteorologia.sieltec.es/PNTeide.png" onerror="loadError(this)" />
 	</body>
 </html>
