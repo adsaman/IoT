@@ -16,47 +16,88 @@
 		}
     </style>
 		<script>
-		var imgUrl = "http://pnteide.meteorologia.sieltec.es/PNTeide.png?"
+		var baseUrl = "http://pnteide.meteorologia.sieltec.es/";
+		var imagesFN = [
+			"PNTeide.png",
+			"PNTaburiente.png",
+			"tamaran.png",
+			"Tajao.png"
+		];
 		// Try to download a new image each 5m
 		var imgDelay = 300000;
-		// Check if new image available each 5s
-		var checkDelay = 5000;
-		var newImage = new Image();
-
-		function preload(url) {
-			console.log("Preloading image from: " + url);
-			newImage.src = url;
+		// Switch images each 5s
+		var carouselDelay = 5000;
+		var slideIndex = 0;
+		var imgCache = new Array();
+		for (var i = 0; i < imagesFN.length; i++) {
+			imgCache[i] = new Image();
 		}
 
-		function updateImage() {
-			teideImg = document.getElementById("dashboard");
+		function preload() {
+			for (var i = 0; i < imagesFN.length; i++) {
+				url = baseUrl + imagesFN[i] + "?" + new Date().getTime();
+				console.log("Preloading image from: " + url);
+				imgCache[i].src = url;
+			}
+		}
 
-			if (newImage.src && newImage.complete && teideImg.src != newImage.src) {
-				console.log("New image available, updating src: " + newImage.src);
-				teideImg.src = newImage.src;
-				teideImg.removeAttribute("style");
+		function carousel() {
+			var docImgs = document.getElementsByClassName("slide");
+			var updated = false;
 
-				setTimeout(preload, imgDelay, imgUrl + new Date().getTime());
-			} else {
-				console.log("No new image");
+			for (var i = 0; i < docImgs.length; i++) {
+				docImgs[i].style.display = "none";
+
+				if (imgCache[i].src && imgCache[i].complete && docImgs[i].src != imgCache[i].src) {
+					console.log("New image available, updating: " + imgCache[i].src);
+					docImgs[i].src = imgCache[i].src;
+
+					updated = true;
+				} 
 			}
 
-			setTimeout(updateImage, checkDelay);
+			slideIndex++;
+			if (slideIndex > docImgs.length) {
+				slideIndex = 1;
+			} 
+			docImgs[slideIndex - 1].style.display = "block"; 
+
+			if (updated) {
+				setTimeout(preload, imgDelay);
+			}
+
+			setTimeout(carousel, carouselDelay);
 		}
 
 		function loadError(image) {
 			console.log("Error loading image");
 			image.onerror = "";
 			image.style = "display: none";
-			preload(imgUrl + new Date().getTime())
+			preload()
 			return true;
 		}
 
-		setTimeout(preload, imgDelay, imgUrl + new Date().getTime());
-		setTimeout(updateImage, checkDelay);
+		function createPlaceholder() {
+			for (var i = 0; i < imagesFN.length; i++) {
+				var img = new Image();
+				img.setAttribute("class", "slide");
+				img.setAttribute("onerror", "loadError(this)");
+				if (i == slideIndex) {
+					img.style.display = "block";
+				} else {
+					img.style.display = "none";
+				}
+				img.src = imgCache[i].src;
+				console.log("Creating new Image object: " + img.src);
+				document.body.appendChild(img);
+			}
+			setTimeout(preload, imgDelay);
+			setTimeout(carousel, carouselDelay);
+		}
+
+		preload();
 		</script>
 	</head>
-	<body>
-		<img id="dashboard" src="http://pnteide.meteorologia.sieltec.es/PNTeide.png" onerror="loadError(this)" />
+	<body onload="createPlaceholder()">
 	</body>
 </html>
