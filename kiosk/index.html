@@ -16,31 +16,40 @@
 		}
     </style>
 		<script>
-
 		var newImage = new Image();
-		newImage.src = "http://pnteide.meteorologia.sieltec.es/PNTeide.png";
 
-		function updateImage(interval) {
-			if (newImage.complete) {
-				teideImg = document.getElementById("dashboard");
+		function preload(url) {
+			console.log("Preloading image from: " + url);
+			newImage.src = url;
+		}
+
+		function updateImage() {
+			teideImg = document.getElementById("dashboard");
+
+			if (newImage.src && newImage.complete && teideImg.src != newImage.src) {
+				console.log("New image available, updating src: " + newImage.src);
 				teideImg.src = newImage.src;
 				teideImg.removeAttribute("style");
-
-				newImage = new Image();
-				newImage.src = "http://pnteide.meteorologia.sieltec.es/PNTeide.png?" + new Date().getTime();
+			} else {
+				console.log("No new image");
 			}
-			setTimeout(updateImage, interval, interval);
+
+			// Check if new image available each 5s
+			setTimeout(updateImage, 5000);
 		}
 
 		function loadError(image) {
+			console.log("Error loading image");
 			image.onerror = "";
 			image.style = "display: none";
-			updateImage(5000);
+
 			return true;
 		}
+
+		setTimeout(preload, 300000, "http://pnteide.meteorologia.sieltec.es/PNTeide.png?" + new Date().getTime());
 		</script>
 	</head>
-	<body onload="updateImage(300000)">
+	<body onload="updateImage()">
 		<img id="dashboard" src="http://pnteide.meteorologia.sieltec.es/PNTeide.png" onerror="loadError(this)" />
 	</body>
 </html>
