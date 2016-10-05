@@ -13,6 +13,11 @@
 		}
 		img {
 			width: 100%;
+			/*animation: fading 5s;*/
+		}
+		@keyframes fading {
+			0% { opacity: 0 }
+			100% { opacity: 1 }
 		}
     </style>
 		<script>
@@ -25,8 +30,8 @@
 		];
 		// Try to download a new image each 5m
 		var imgDelay = 300000;
-		// Switch images each 5s
-		var carouselDelay = 5000;
+		// Switch images each 10s
+		var carouselDelay = 10000;
 		var slideIndex = 0;
 		var imgCache = new Array();
 		for (var i = 0; i < imagesFN.length; i++) {
@@ -57,14 +62,10 @@
 			}
 
 			slideIndex++;
-			if (slideIndex > docImgs.length) {
-				slideIndex = 1;
-			} 
-			docImgs[slideIndex - 1].style.display = "block"; 
+			if (slideIndex >= docImgs.length) { slideIndex = 0 } 
+			docImgs[slideIndex].style.display = "block"; 
 
-			if (updated) {
-				setTimeout(preload, imgDelay);
-			}
+			if (updated) { setTimeout(preload, imgDelay) }
 
 			setTimeout(carousel, carouselDelay);
 		}
@@ -91,6 +92,7 @@
 				console.log("Creating new Image object: " + img.src);
 				document.body.appendChild(img);
 			}
+
 			setTimeout(preload, imgDelay);
 			setTimeout(carousel, carouselDelay);
 		}
