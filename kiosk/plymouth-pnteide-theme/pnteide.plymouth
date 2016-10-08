@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=pnteide
+Description=Parque Nacional del Teide Splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/pnteide
+ScriptFile=/usr/share/plymouth/themes/pnteide/pnteide.script
